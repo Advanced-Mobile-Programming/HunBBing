@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "365712899478",
+    "project_id": "hunbbing",
+    "storage_bucket": "hunbbing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365712899478:android:3581b32a4b6c667007f1b7",
+        "android_client_info": {
+          "package_name": "com.example.hunbbing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-eHRXqt2eeMAhVtZiWIG54bdrwhswEP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
