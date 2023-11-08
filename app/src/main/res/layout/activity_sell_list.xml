@@ -22,6 +22,7 @@
             android:src="@drawable/hunbbing_logo"
             />
         <ImageButton
+            android:id="@+id/search_btn"
             android:layout_marginStart="200dp"
             android:layout_gravity="center"
             android:layout_width="40dp"

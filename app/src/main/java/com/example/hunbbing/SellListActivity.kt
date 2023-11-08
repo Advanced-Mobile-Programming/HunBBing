@@ -1,13 +1,14 @@
 package com.example.hunbbing
 
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -64,18 +65,30 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>) :
 }
 
 class SellListActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
+
+        val fragmentSearch = SearchFragment()
+        
+
+        val searchBtn = findViewById<ImageButton>(R.id.search_btn)
+        searchBtn.setOnClickListener{
+
+        }
+
+
 
         val imageResourceUri1 = Uri.parse("android.resource://com.example.hunbbing/drawable/product")
         val imageResourceUri2 = Uri.parse("android.resource://com.example.hunbbing/drawable/like_off")
         val imageResourceUri3 = Uri.parse("android.resource://com.example.hunbbing/drawable/usericon")
         val imageResourceUri4 = Uri.parse("android.resource://com.example.hunbbing/drawable/message")
 
-        val list = ArrayList<BoardItem>()
-        list.add(BoardItem(imageResourceUri1, "닌텐도 스위치", imageResourceUri3,imageResourceUri2,imageResourceUri4,"100000", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
-        list.add(BoardItem(imageResourceUri1, "닝텐도", imageResourceUri3,imageResourceUri2,imageResourceUri4,"10000", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
+        val list = ArrayList<BoardItem>()   
+        list.add(BoardItem(imageResourceUri1, "닌텐도 스위치", imageResourceUri3,imageResourceUri2,imageResourceUri4,"100,000원", "스위치 입니다.", "#게임", "코고는 이나경", false, 5, 5, false, "판매종료"))
+        list.add(BoardItem(imageResourceUri1, "닝텐도", imageResourceUri3,imageResourceUri2,imageResourceUri4,"10000원", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
         list.add(BoardItem(imageResourceUri1, "상품3", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
         list.add(BoardItem(imageResourceUri1, "상품4", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
         list.add(BoardItem(imageResourceUri1, "상품5", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
