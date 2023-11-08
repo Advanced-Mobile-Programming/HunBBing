@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
+interface OnItemClickListener {
+    fun onItemClicked(position: Int)
+}
 data class BoardItem(
     val img: Uri?, val name: String,val imgUser: Uri?,val imgLike: Uri?,val imgMsg: Uri?, val price: String, val intro: String, val tag: String, val owner: String,
     val msgState: Boolean,
@@ -19,7 +25,7 @@ data class BoardItem(
     val likeState: Boolean, val state: String)
 
 
-class BoardAdapter(val itemList: ArrayList<BoardItem>) :
+class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnItemClickListener) :
     RecyclerView.Adapter<BoardAdapter.BoardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
@@ -40,6 +46,12 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>) :
         holder.imgLike.setImageURI(itemList[position].imgLike)
         holder.imgUser.setImageURI(itemList[position].imgUser)
         holder.imgMsg.setImageURI(itemList[position].imgMsg)
+
+
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClicked(position)
+        }
 
     }
 
@@ -64,20 +76,45 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>) :
     }
 }
 
-class SellListActivity : AppCompatActivity() {
+class SellListActivity : AppCompatActivity() , OnItemClickListener{
 
+    override fun onItemClicked(position: Int) {
+        // 현재 프래그먼트를 찾습니다.
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.bar_fragment)
 
+        // 현재 프래그먼트에 fade_out 애니메이션을 적용합니다.
+        currentFragment?.let {
+            val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+            it.view?.startAnimation(fadeOut)
+            fadeOut.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    // 애니메이션 시작 시 필요한 작업 (필요하다면)
+                }
+
+                override fun onAnimationEnd(animation: Animation) {
+                    // 애니메이션이 끝난 후 새 프래그먼트로 교체합니다.
+                    val newFragment = RogoBarFragment()
+                    supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, 0)
+                        .replace(R.id.bar_fragment, newFragment)
+                        .commit()
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {
+                    // 애니메이션 반복 시 필요한 작업 (필요하다면)
+                }
+            })
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
 
-        val fragmentSearch = SearchFragment()
-        
+        val fragmentLogo = RogoBarFragment()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.bar_fragment,fragmentLogo)
+            .commit()
 
-        val searchBtn = findViewById<ImageButton>(R.id.search_btn)
-        searchBtn.setOnClickListener{
-
-        }
 
 
 
@@ -94,11 +131,12 @@ class SellListActivity : AppCompatActivity() {
         list.add(BoardItem(imageResourceUri1, "상품5", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
 
 
-        val adapter = BoardAdapter(list)
+        val adapter = BoardAdapter(list, this)
 
         // RecyclerView 설정
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+
     }
 }

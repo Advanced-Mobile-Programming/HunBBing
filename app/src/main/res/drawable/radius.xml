@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- This is the background color -->
+    <corners android:radius="100dp"/> <!-- This is what makes it circular. Adjust the radius to fit your needs. It should be at least half the width/height of your ImageView -->
+</shape>
