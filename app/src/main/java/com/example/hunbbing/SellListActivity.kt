@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -92,12 +93,16 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener{
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
-                    // 애니메이션이 끝난 후 새 프래그먼트로 교체합니다.
-                    val newFragment = RogoBarFragment()
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, 0)
-                        .replace(R.id.bar_fragment, newFragment)
-                        .commit()
+
+                    if (viewModel.barState.value == false) {
+                        // 애니메이션이 끝난 후 새 프래그먼트로 교체합니다.
+                        val newFragment = RogoBarFragment()
+                        supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, 0)
+                            .replace(R.id.bar_fragment, newFragment)
+                            .commit()
+                        viewModel.changeValueFT()
+                    }
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
@@ -106,6 +111,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener{
             })
         }
     }
+    private val viewModel by viewModels<SellListViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
