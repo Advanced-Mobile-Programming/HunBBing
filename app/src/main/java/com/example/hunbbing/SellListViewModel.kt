@@ -1,18 +1,30 @@
 package com.example.hunbbing
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+
+
 class SellListViewModel : ViewModel() {
+    private val _items = MutableLiveData<List<BoardItem>>()
+    val items: LiveData<List<BoardItem>> = _items
     private val _barState = MutableLiveData<Boolean>()
-
     val barState : LiveData<Boolean> get()= _barState
+    private val originalList = listOf(
+        // 여기에 초기 데이터 아이템 추가
+        BoardItem(Uri.parse("android.resource://com.example.hunbbing/drawable/product"), "닌텐도 스위치", Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"), Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"), Uri.parse("android.resource://com.example.hunbbing/drawable/message"), "100,000원", "스위치 입니다.", "#게임", "코고는 이나경", false, 5, 5, false, "판매종료"),
+        // 추가 아이템...
+    )
 
-    init{
+
+
+    init {
+        // 초기 데이터 로드
+        _items.value = originalList
         _barState.value = true
     }
-
     fun changeValueTF() {
         if(_barState.value==true){
             _barState.value = false
@@ -23,6 +35,16 @@ class SellListViewModel : ViewModel() {
             _barState.value = true
         }
     }
-
-
+    fun searchProduct(query: String) {
+        val filteredList = if (query.isEmpty()) {
+            originalList
+        } else {
+            originalList.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                        it.intro.contains(query, ignoreCase = true) ||
+                        it.tag.contains(query, ignoreCase = true)
+            }
+        }
+        _items.value = filteredList
+    }
 }

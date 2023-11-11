@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -23,48 +25,40 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.launch
 
 
 interface OnItemClickListener {
     fun onItemClicked(position: Int)
 }
 data class BoardItem(
-    val img: Uri?, val name: String,val imgUser: Uri?,val imgLike: Uri?,val imgMsg: Uri?, val price: String, val intro: String, val tag: String, val owner: String,
+    val img: Uri?,
+    val name: String,
+    val imgUser: Uri?,
+    val imgLike: Uri?,
+    val imgMsg: Uri?,
+    val price: String,
+    val intro: String,
+    val tag: String,
+    val owner: String,
     val msgState: Boolean,
-    val message: Int, val like: Int,
-    val likeState: Boolean, val state: String)
+    val message: Int,
+    val like: Int,
+    val likeState: Boolean,
+    val state: String
+)
 
 
 class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnItemClickListener) :
     RecyclerView.Adapter<BoardAdapter.BoardViewHolder>() {
-
-    private val filteredItems = MutableLiveData<ArrayList<BoardItem>>(ArrayList(itemList))
-
-
-
-    fun getItemsLiveData(): LiveData<ArrayList<BoardItem>> {
-        return filteredItems
+    fun updateItems(newItems: List<BoardItem>) {
+        itemList.clear()
+        itemList.addAll(newItems)
+        notifyDataSetChanged() // 데이터가 변경되었음을 어댑터에 알림
     }
-    fun resetList() {
-        filteredItems.value = ArrayList(itemList) // LiveData에 값을 할당하여 변경 감지
+    fun getItems() : ArrayList<BoardItem>{
+        return itemList;
     }
-
-    fun filterList(filteredItems: ArrayList<BoardItem>) {
-        this.filteredItems.value = filteredItems // LiveData에 값을 할당하여 변경 감지
-    }
-    fun addItem(item: BoardItem) {
-        itemList.add(item)
-        notifyItemInserted(itemList.size - 1)
-    }
-
-    fun removeItem(position: Int) {
-        itemList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-    fun getItems(): ArrayList<BoardItem> {
-        return itemList
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_item_menu, parent, false)
         return BoardViewHolder(view)
@@ -95,6 +89,7 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnIt
         return itemList.count()
     }
 
+
     inner class BoardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imgUser = itemView.findViewById<ImageView>(R.id.imgUser)
         var imgLike = itemView.findViewById<ImageView>(R.id.imgLike)
@@ -111,12 +106,15 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnIt
     }
 }
 
-class SellListActivity : AppCompatActivity() , OnItemClickListener{
+class SellListActivity : AppCompatActivity() , OnItemClickListener {
+
     private val viewModel by viewModels<SellListViewModel>()
     lateinit var storage: FirebaseStorage
+
     override fun onItemClicked(position: Int) {
 
-        if(viewModel.barState.value==false) {
+
+        if (viewModel.barState.value == false) {
             // 현재 프래그먼트를 찾습니다.
             val currentFragment = supportFragmentManager.findFragmentById(R.id.bar_fragment)
 
@@ -152,52 +150,31 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener{
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
 
         Firebase.auth.currentUser ?: finish()
 
-
-
-
-
         // 가져오기 val imageRef1 = storageRef.child("images/computer_sangsangbugi.jpg")
-
 
 
         val fragmentLogo = RogoBarFragment()
         supportFragmentManager.beginTransaction()
-            .add(R.id.bar_fragment,fragmentLogo)
+            .add(R.id.bar_fragment, fragmentLogo)
             .commit()
 
 
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
+            layoutManager = LinearLayoutManager(this@SellListActivity)
+            adapter = BoardAdapter(ArrayList(), this@SellListActivity)
+        }
 
-
-        val imageResourceUri1 = Uri.parse("android.resource://com.example.hunbbing/drawable/product")
-        val imageResourceUri2 = Uri.parse("android.resource://com.example.hunbbing/drawable/like_off")
-        val imageResourceUri3 = Uri.parse("android.resource://com.example.hunbbing/drawable/usericon")
-        val imageResourceUri4 = Uri.parse("android.resource://com.example.hunbbing/drawable/message")
-
-        val list = ArrayList<BoardItem>()
-        list.add(BoardItem(imageResourceUri1, "닌텐도 스위치", imageResourceUri3,imageResourceUri2,imageResourceUri4,"100,000원", "스위치 입니다.", "#게임", "코고는 이나경", false, 5, 5, false, "판매종료"))
-        list.add(BoardItem(imageResourceUri1, "닝텐도", imageResourceUri3,imageResourceUri2,imageResourceUri4,"10000원", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
-        list.add(BoardItem(imageResourceUri1, "상품3", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
-        list.add(BoardItem(imageResourceUri1, "상품4", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
-        list.add(BoardItem(imageResourceUri1, "상품5", imageResourceUri3,imageResourceUri2,imageResourceUri4,"가격1", "상품 설명1", "태그1", "소유자1", false, 5, 5, false, "판매종료"))
-
-
-        val adapter = BoardAdapter(list, this)
-        adapter.getItemsLiveData().observe(this, Observer { items ->
-            // 아이템 리스트가 변경될 때 마다 리사이클러뷰 업데이트
-            adapter.notifyDataSetChanged()
+        // LiveData 관찰
+        viewModel.items.observe(this, Observer { items ->
+            (recyclerView.adapter as? BoardAdapter)?.updateItems(items)
         })
-        // RecyclerView 설정
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-
     }
 }
+
+
