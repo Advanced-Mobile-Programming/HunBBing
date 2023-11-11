@@ -22,9 +22,7 @@ class RogoBarFragment : Fragment() {
         val search = view.findViewById<ImageButton>(R.id.search_btn)
         if(viewModel.barState.value == true) {
             search.setOnClickListener {
-                // 현재 프래그먼트의 뷰를 찾습니다.
                 val currentFragmentView = view
-                // 현재 뷰에 fade_out 애니메이션을 적용합니다.
                 val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
                 currentFragmentView.startAnimation(fadeOut)
                 fadeOut.setAnimationListener(object : Animation.AnimationListener {
