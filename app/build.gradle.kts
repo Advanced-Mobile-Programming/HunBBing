@@ -2,11 +2,13 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
     namespace = "com.example.hunbbing"
     compileSdk = 34
+    
 
     buildFeatures {
         dataBinding = true
@@ -48,6 +50,12 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.core:core-ktx:+")
     implementation("com.google.firebase:firebase-auth:22.2.0")
+    implementation ("com.google.firebase:firebase-firestore:17.1.5")
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation ("com.google.firebase:firebase-crashlytics:18.2.6")
     implementation ("androidx.activity:activity-ktx:1.1.0")
     implementation ("androidx.fragment:fragment-ktx:1.2.5")
     testImplementation("junit:junit:4.13.2")

@@ -19,27 +19,30 @@ class RogoBarFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_logo_bar_fragment, container, false)
         val search = view.findViewById<ImageButton>(R.id.search_btn)
-        search.setOnClickListener {
-            // 현재 프래그먼트의 뷰를 찾습니다.
-            val currentFragmentView = view
-            // 현재 뷰에 fade_out 애니메이션을 적용합니다.
-            val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
-            currentFragmentView.startAnimation(fadeOut)
-            fadeOut.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {
-                }
-                override fun onAnimationEnd(animation: Animation) {
-                    val fragmentSearch = SearchFragment()
-                    parentFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, 0)
-                        .replace(R.id.bar_fragment, fragmentSearch)
-                        .commit()
-                    viewModel.changeValueTF()
-                }
+        if(viewModel.barState.value == true) {
+            search.setOnClickListener {
+                // 현재 프래그먼트의 뷰를 찾습니다.
+                val currentFragmentView = view
+                // 현재 뷰에 fade_out 애니메이션을 적용합니다.
+                val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+                currentFragmentView.startAnimation(fadeOut)
+                fadeOut.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation) {
+                    }
 
-                override fun onAnimationRepeat(animation: Animation) {
-                }
-            })
+                    override fun onAnimationEnd(animation: Animation) {
+                        val fragmentSearch = SearchFragment()
+                        parentFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, 0)
+                            .replace(R.id.bar_fragment, fragmentSearch)
+                            .commit()
+                        viewModel.changeValueTF()
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation) {
+                    }
+                })
+            }
         }
         return view
 

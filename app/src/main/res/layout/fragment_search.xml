@@ -8,14 +8,15 @@
     tools:context=".SearchFragment">
 
     <EditText
+        android:id="@+id/search_et"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:paddingStart="20dp"
-        android:hint="상품명을 입력하세요."
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/radius"
-        />
+        android:hint="상품명을 입력하세요"
+        android:privateImeOptions="defaultInputmode=korean"
+        android:paddingStart="20dp" />
 
 </FrameLayout>
