@@ -55,6 +55,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
     implementation ("com.google.firebase:firebase-crashlytics:18.2.6")
     implementation ("androidx.activity:activity-ktx:1.1.0")
     implementation ("androidx.fragment:fragment-ktx:1.2.5")
