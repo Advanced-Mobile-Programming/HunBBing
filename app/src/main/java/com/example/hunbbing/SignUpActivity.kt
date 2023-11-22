@@ -25,7 +25,8 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        database = Firebase.database.reference
+        val databaseUrl = "https://hunbbing-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        database = FirebaseDatabase.getInstance(databaseUrl).reference
         auth = Firebase.auth
 
         binding.signupButton.setOnClickListener {
@@ -62,14 +63,14 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun addUserToDatabase(name: String, email: String, userId: String, password: String,  birth: String) {
-        Log.d("SignUpActivity", "addUserToDatabase 호출됨")
-        val user = User(name, email,  userId, password, birth)
+    private fun addUserToDatabase(name: String, email: String, password: String, userId: String, birth: String) {
+        val user = User(name, email, userId, password, birth)
         database.child("user").child(userId).setValue(user).addOnSuccessListener {
             Log.d("SignUpActivity", "데이터베이스에 사용자 추가 성공: $userId")
         }.addOnFailureListener { exception ->
             Log.e("SignUpActivity", "데이터베이스에 사용자 추가 실패", exception)
         }
     }
+
 
 }
