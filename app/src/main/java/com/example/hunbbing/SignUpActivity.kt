@@ -25,8 +25,8 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val databaseUrl = "https://hunbbing-default-rtdb.asia-southeast1.firebasedatabase.app/"
-        database = FirebaseDatabase.getInstance(databaseUrl).reference
+        //val databaseUrl = "https://hunbbing-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        database = Firebase.database.reference
         auth = Firebase.auth
 
         binding.signupButton.setOnClickListener {
@@ -58,6 +58,7 @@ class SignUpActivity : AppCompatActivity() {
                 addUserToDatabase(name, email, password ,userId, birth)
                 Log.d("SignUpActivity", "회원가입 성공: $userId")
             } else {
+                Log.d("SignUpActivity",it.exception.toString())
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
             }
         }
