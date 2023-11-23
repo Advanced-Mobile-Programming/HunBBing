@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 버튼이 눌렸을 때의 상태 -->
+    <item android:state_pressed="true" >
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/btn_pressed" />
+        </shape>
+    </item>
+
+    <!-- 버튼이 포커스를 받았을 때의 상태 -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/btn_focused" />
+        </shape>
+    </item>
+
+    <!-- 기본 상태 -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/green" />
+            <stroke android:width="5dp" android:color="@color/green" />
+        </shape>
+    </item>
+</selector>
