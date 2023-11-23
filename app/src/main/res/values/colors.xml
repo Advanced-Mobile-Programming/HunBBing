@@ -5,4 +5,7 @@
     <color name="Lavender">#8692f7</color>
     <color name="grey">#D3D3D3</color>
     <color name="green">#90B54C</color>
+    <color name="btn_focused">#AOC55A</color>
+    <color name="btn_pressed">#7A9B42</color>
+    <color name="yellow">#E8C538</color>
 </resources>
