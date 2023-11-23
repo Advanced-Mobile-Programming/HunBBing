@@ -13,10 +13,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/chat_user_icon" />
+        app:srcCompat="@drawable/chatRoom_user_icon" />
 
     <TextView
-        android:id="@+id/chatroom_user_id"
+        android:id="@+id/chatroom_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -34,8 +34,8 @@
         android:layout_marginTop="16dp"
         android:text="text"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/chatroom_user_id"
-        app:layout_constraintTop_toBottomOf="@+id/chatroom_user_id" />
+        app:layout_constraintStart_toStartOf="@+id/chatroom_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/chatroom_user_name" />
 
     <View
         android:id="@+id/line_view"
