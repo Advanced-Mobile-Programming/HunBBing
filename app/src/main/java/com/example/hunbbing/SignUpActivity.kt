@@ -4,13 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.hunbbing.Entity.User
 import com.example.hunbbing.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import java.util.Date
-import kotlin.random.Random
 
 class SignUpActivity : AppCompatActivity() {
 
