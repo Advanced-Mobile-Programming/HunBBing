@@ -80,8 +80,8 @@ class AddItemActivity : AppCompatActivity() {
     private fun addItemToDatabase() {
 
 
-        val sharedPref = getSharedPreferences("MyPreference", Context.MODE_PRIVATE)
-        val name = sharedPref?.getString("userName","알 수 없음")
+        val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        val name = sharedPref.getString("UserName","알 수 없음")
         val uid = Firebase.auth.currentUser?.uid!!
         val itemName = item.text.toString()
         val itemPrice = price.text.toString().toInt()

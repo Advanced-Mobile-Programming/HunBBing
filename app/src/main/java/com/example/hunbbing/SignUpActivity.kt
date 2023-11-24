@@ -71,6 +71,25 @@ class SignUpActivity : AppCompatActivity() {
         }.addOnFailureListener { exception ->
             Log.e("SignUpActivity", "데이터베이스에 사용자 추가 실패", exception)
         }
+        saveUserToPreferences(name, email, userId, birth)
+    }
+
+    private fun saveUserToPreferences(name: String, email: String, userId: String, birth: String) {
+        // SharedPreferences 인스턴스를 가져옵니다.
+        val sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // 사용자 정보를 SharedPreferences에 저장합니다.
+        editor.putString("UserName", name)
+        editor.putString("UserEmail", email)
+        editor.putString("UserId", userId)
+        editor.putString("UserBirth", birth)
+
+        // 변경사항을 적용합니다.
+        editor.apply()
+
+        // 로그를 통해 저장이 성공했는지 확인합니다.
+        Log.d("SignUpActivity", "SharedPreferences에 사용자 정보 저장 성공: $userId")
     }
 
 
