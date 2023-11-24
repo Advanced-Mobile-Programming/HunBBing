@@ -1,6 +1,7 @@
 package com.example.hunbbing
 
 import android.content.ContentUris
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -174,6 +176,14 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         viewModel.items.observe(this, Observer { items ->
             (recyclerView.adapter as? BoardAdapter)?.updateItems(items)
         })
+
+        val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
+        addbtn.setOnClickListener {
+            val intent = Intent(this, AddItemActivity::class.java)
+            startActivity(intent)
+
+        }
+
     }
 }
 
