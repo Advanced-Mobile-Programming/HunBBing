@@ -27,6 +27,10 @@
         <activity
             android:name=".AddItemActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".EItemActivity"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"

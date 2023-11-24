@@ -207,12 +207,14 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             (recyclerView.adapter as? BoardAdapter)?.updateItems(items)
         })
 
+
         val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
         addbtn.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
             startActivity(intent)
 
         }
+
 
     }
 }
