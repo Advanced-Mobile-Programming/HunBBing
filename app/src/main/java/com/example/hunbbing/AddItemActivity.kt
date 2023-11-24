@@ -3,6 +3,7 @@ package com.example.hunbbing
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
@@ -15,6 +16,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 import android.Manifest
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+
 
 
 class AddItemActivity : AppCompatActivity() {
@@ -49,13 +53,14 @@ class AddItemActivity : AppCompatActivity() {
         DbR = FirebaseDatabase.getInstance().getReference("AddItems")
 
         plusbtn.setOnClickListener {
+
             /*
             if (selectedImgUri != null) {
                 uploadImageToFirebaseStorage()
             } else {
                 Toast.makeText(this, "이미지를 선택해주세요", Toast.LENGTH_SHORT).show()
-            }
-            */
+            }*/
+
 
             addItemToDatabase()
         }
@@ -73,6 +78,11 @@ class AddItemActivity : AppCompatActivity() {
     //imageUrl: String , imageUrl
 
     private fun addItemToDatabase() {
+
+
+        val sharedPref = getSharedPreferences("MyPreference", Context.MODE_PRIVATE)
+        val name = sharedPref?.getString("userName","알 수 없음")
+        val uid = Firebase.auth.currentUser?.uid!!
         val itemName = item.text.toString()
         val itemPrice = price.text.toString().toInt()
         val itemPriceText = price.text.toString()
@@ -81,7 +91,7 @@ class AddItemActivity : AppCompatActivity() {
 
         if (itemName.isEmpty() || itemPriceText.isEmpty() || itemexplain.isEmpty()  != null) {
             val itemId = DbR.push().key
-            val newItem = Item(itemId, itemName, itemPrice, itemexplain, itemTags)
+            val newItem = Item(itemId, itemName, itemPrice, itemexplain, itemTags,  uid, name)
 
             itemId?.let {
                 DbR.child(it).setValue(newItem).addOnCompleteListener {
@@ -106,6 +116,10 @@ class AddItemActivity : AppCompatActivity() {
 
 
 
+
+    /*
+    아래 코드 죄다 카메라 권한 실패
+     */
     private fun selectImage() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -147,14 +161,18 @@ class AddItemActivity : AppCompatActivity() {
 
 
     private fun requestStoragePermission() {
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_DENIED
-        ) {
-            // 권한이 거부되었다면 권한 요청
-            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-            requestPermissions(permissions, PERMISSION_CODE)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                // 권한이 거부되었다면 권한 요청
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestPermissions(permissions, PERMISSION_CODE)
+            } else {
+                // 권한이 이미 있으면 이미지 선택
+                selectImage()
+            }
         } else {
-            // 권한이 이미 있으면 이미지 선택
+            // 시스템 OS가 마시멜로우 미만일 경우
             selectImage()
         }
     }
@@ -170,9 +188,12 @@ class AddItemActivity : AppCompatActivity() {
                 } else {
                     // 권한이 거부됨
                     Toast.makeText(this, "권한이 거부되었습니다", Toast.LENGTH_SHORT).show()
+
                 }
             }
         }
     }
+
+
 
 }
