@@ -186,5 +186,3 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
 
     }
 }
-
-
