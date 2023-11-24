@@ -22,6 +22,9 @@
             android:name=".SellListActivity"
             android:exported="false" />
         <activity
+            android:name=".AddItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
