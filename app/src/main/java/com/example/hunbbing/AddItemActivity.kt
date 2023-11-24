@@ -41,6 +41,12 @@ class AddItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_item_add)
 
 
+        val backButton = findViewById<ImageView>(R.id.iv_back)
+        backButton.setOnClickListener {
+
+            finish()
+        }
+
         item = findViewById(R.id.itemText)
         price = findViewById(R.id.priceText)
         explain = findViewById(R.id.explainText)
@@ -78,41 +84,64 @@ class AddItemActivity : AppCompatActivity() {
     //imageUrl: String , imageUrl
 
     private fun addItemToDatabase() {
-
-
         val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
         val name = sharedPref.getString("UserName","알 수 없음")
-        val uid = Firebase.auth.currentUser?.uid!!
-        val itemName = item.text.toString()
-        val itemPrice = price.text.toString().toInt()
-        val itemPriceText = price.text.toString()
-        val itemexplain = explain.text.toString()
-        val itemTags = tag.text.toString()
+        val uid = Firebase.auth.currentUser?.uid ?: return showError("사용자 인증에 실패했습니다.")
+        val itemName = item.text.toString().trim()
+        val itemPriceText = price.text.toString().trim()
+        val itemexplain = explain.text.toString().trim()
+        val itemTags = tag.text.toString().trim()
 
-        if (itemName.isEmpty() || itemPriceText.isEmpty() || itemexplain.isEmpty()  != null) {
-            val itemId = DbR.push().key
-            val newItem = Item(itemId, itemName, itemPrice, itemexplain, itemTags,  uid, name)
+        // 모든 필드가 채워졌는지 검사합니다.
+        if (itemName.isBlank()) {
+            showError("상품 이름을 입력해주세요.")
+            return
+        }
 
-            itemId?.let {
-                DbR.child(it).setValue(newItem).addOnCompleteListener {
-                    Toast.makeText(applicationContext, "등록 되었습니다.", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, SellListActivity::class.java)
-                    startActivity(intent)
+        if (itemPriceText.isBlank()) {
+            showError("상품 가격을 입력해주세요.")
+            return
+        }
 
+        val itemPrice = itemPriceText.toIntOrNull()
+        if (itemPrice == null || itemPrice <= 0) {
+            showError("유효한 상품 가격을 입력해주세요.")
+            return
+        }
+
+        if (itemexplain.isBlank()) {
+            showError("상품 정보를 입력해주세요.")
+            return
+        }
+
+        if (itemName.isEmpty() || itemPriceText.isEmpty() || itemexplain.isEmpty()) {
+            // 필수 필드가 채워지지 않았으므로 오류 메시지를 표시하고 함수를 종료합니다.
+            showError("모든 필드를 채워주세요.")
+            return
+        }
+
+        // 모든 검사를 통과하면 데이터베이스에 아이템을 추가합니다.
+        val itemId = DbR.push().key
+        val newItem = Item(itemId, itemName, itemPrice, itemexplain, itemTags, uid, name)
+
+        itemId?.let {
+            DbR.child(it).setValue(newItem).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // 데이터베이스에 추가가 성공했을 때만 새로운 Activity로 이동합니다.
+                    Toast.makeText(applicationContext, "상품이 등록되었습니다.", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, SellListActivity::class.java))
+                } else {
+                    // 데이터베이스에 추가가 실패했을 때 오류 메시지를 표시합니다.
+                    showError("상품 등록에 실패했습니다.")
                 }
             }
-        }
-        if(itemName.isEmpty()) {
-            Toast.makeText(applicationContext, "상품 이름을 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }
-        if(itemPriceText.isEmpty()) {
-            Toast.makeText(applicationContext, "상품 가격을 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }
-        if(itemexplain.isEmpty()) {
-            Toast.makeText(applicationContext, "상품 정보을 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }
-
+        } ?: showError("상품을 등록할 수 없습니다.")
     }
+
+    private fun showError(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
 
 
 
