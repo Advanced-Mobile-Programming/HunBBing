@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -142,7 +143,33 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                 })
             }
         }
+        else{
+            val item = viewModel.items.value?.get(position)
+            item?.let { selectedItem ->
+                pushNextPage(selectedItem)
+            }
+        }
 
+    }
+
+    fun pushNextPage(item: BoardItem) {
+        val intent = Intent(this, Look::class.java).apply {
+            putExtra("name", item.name)
+            putExtra("img", item.img.toString())
+            putExtra("imgUser", item.imgUser.toString())
+            putExtra("imgLike", item.imgLike.toString())
+            putExtra("imgMsg", item.imgMsg.toString())
+            putExtra("price", item.price)
+            putExtra("intro", item.intro)
+            putExtra("tag", item.tag)
+            putExtra("owner", item.owner)
+            putExtra("msgState", item.msgState)
+            putExtra("message", item.message)
+            putExtra("like", item.like)
+            putExtra("likeState", item.likeState)
+            putExtra("state", item.state)
+        }
+        startActivity(intent)
     }
 
 
@@ -181,7 +208,6 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                         false,
                         "판매중")
                     viewModel.addItem(item);
-
                 }
             }
 

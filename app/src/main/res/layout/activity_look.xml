@@ -138,18 +138,41 @@ android:orientation="vertical"
         </LinearLayout>
 
     </LinearLayout>
+
     <TextView
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textSize="20dp"
         android:id="@+id/product_intro"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="안녕하세요\n새상품 입니다\n기스없음."
-        android:ellipsize="end"
-        android:textColor="#C0C0C0"
+        android:layout_height="208dp"
+        android:layout_gravity="center"
         android:layout_margin="20dp"
-        />
+        android:ellipsize="end"
+        android:text="안녕하세요\n새상품 입니다\n기스없음."
+        android:textAlignment="center"
+        android:textColor="#C0C0C0"
+        android:textSize="20dp" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+
+    <Button
+        android:layout_marginEnd="20dp"
+        android:id="@+id/button3"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="수정" />
+    <Button
+        android:layout_marginStart="20dp"
+        android:id="@+id/button4"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="채팅" />
+</LinearLayout>
+
+
+
 </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

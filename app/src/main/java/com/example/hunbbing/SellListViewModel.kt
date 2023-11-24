@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 
 class SellListViewModel : ViewModel() {
     private val _items = MutableLiveData<List<BoardItem>>()
-    val items: LiveData<List<BoardItem>> = _items
+    val items: LiveData<List<BoardItem>> get() = _items
     private val _barState = MutableLiveData<Boolean>()
     val barState : LiveData<Boolean> get()= _barState
     private val originalList = mutableListOf<BoardItem>(
@@ -17,7 +17,6 @@ class SellListViewModel : ViewModel() {
         BoardItem(Uri.parse("android.resource://com.example.hunbbing/drawable/product"), "닌텐도 스위치", Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"), Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"), Uri.parse("android.resource://com.example.hunbbing/drawable/message"), "100,000원", "스위치 입니다.", "#게임", "코고는 이나경", false, 5, 5, false, "판매종료"),
         // 추가 아이템...
     )
-
     fun addItem(item : BoardItem){
         originalList.add(0,item)
         _items.value = originalList.toList()
