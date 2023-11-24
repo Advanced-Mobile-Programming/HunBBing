@@ -49,7 +49,7 @@ class EItemActivity : AppCompatActivity() {
         }
 
 
-        //val itemId = "-Nk-mzCnIx7WLeBDNjF6" // 여기서는 예시로 "item_id"를 사용합니다.
+        //val itemId = "-Nk-mzCnIx7WLeBDNjF6" // 예시로
         val itemId = intent.getStringExtra("ITEM_ID") ?: return // 기본값 처리 필요
         loadItemData(itemId)
 
@@ -63,7 +63,7 @@ class EItemActivity : AppCompatActivity() {
             }*/
 
 
-            updateItemToDatabase()
+            updateItemToDatabase(itemId)
         }
 
         /*
@@ -103,7 +103,7 @@ class EItemActivity : AppCompatActivity() {
     }
 
 
-    private fun updateItemToDatabase() {
+    private fun updateItemToDatabase(itemId: String) {
         val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
         val name = sharedPref.getString("UserName","알 수 없음")
         val uid = Firebase.auth.currentUser?.uid ?: return showError("사용자 인증에 실패했습니다.")
@@ -140,18 +140,17 @@ class EItemActivity : AppCompatActivity() {
             return
         }
 
-        // 모든 검사를 통과하면 데이터베이스에 아이템을 추가합니다.
-        val itemId = DbR.push().key
+
         val updataItem = Item(itemId, itemName, itemPrice, itemexplain, itemTags, uid, name)
 
         itemId?.let {
             DbR.child(it).setValue(updataItem).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // 데이터베이스에 추가가 성공했을 때만 새로운 Activity로 이동합니다.
+
                     Toast.makeText(applicationContext, "상품이 업데이트 되었습니다.", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, SellListActivity::class.java))
                 } else {
-                    // 데이터베이스에 추가가 실패했을 때 오류 메시지를 표시합니다.
+
                     showError("상품 업데이트에 실패했습니다.")
                 }
             }

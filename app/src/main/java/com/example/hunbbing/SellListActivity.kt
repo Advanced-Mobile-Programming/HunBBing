@@ -208,6 +208,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         })
 
 
+
         val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
         addbtn.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
