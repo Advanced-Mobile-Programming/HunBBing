@@ -43,7 +43,6 @@ class AddItemActivity : AppCompatActivity() {
 
         val backButton = findViewById<ImageView>(R.id.iv_back)
         backButton.setOnClickListener {
-
             finish()
         }
 

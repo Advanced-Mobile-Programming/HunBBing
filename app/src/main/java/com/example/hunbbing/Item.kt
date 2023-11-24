@@ -6,7 +6,7 @@ data class Item (
     var itemName: String? = null,
 
     var price: Int? = null,
-    var itmeInfo: String? =null,
+    var itemInfo: String? =null,
     var tags: String? = null,
 
 
