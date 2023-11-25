@@ -51,9 +51,19 @@
             android:layout_weight="1" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chattingroom_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/baseline_chat_24"
+        app:maxImageSize="32dp"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addbtn"
+        app:maxImageSize="32dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
