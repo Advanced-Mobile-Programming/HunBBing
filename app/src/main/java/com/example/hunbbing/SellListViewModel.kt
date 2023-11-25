@@ -14,22 +14,7 @@ class SellListViewModel : ViewModel() {
     val barState: LiveData<Boolean> get() = _barState
     private val originalList = mutableListOf<BoardItem>(
         // 여기에 초기 데이터 아이템 추가
-        BoardItem(
-            Uri.parse("android.resource://com.example.hunbbing/drawable/product"),
-            "닌텐도 스위치",
-            Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
-            Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
-            Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
-            "100,000원",
-            "스위치 입니다.",
-            "#게임",
-            "코고는 이나경",
-            false,
-            5,
-            5,
-            false,
-            "판매종료"
-        ),
+
         // 추가 아이템...
     )
 
