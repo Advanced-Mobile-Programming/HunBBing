@@ -9,6 +9,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -42,10 +43,20 @@ class Look : AppCompatActivity() {
             finish()
         }
 
+        val itemId = intent.getStringExtra("ITEM_ID") ?: ""
+        val itemOwnerId = intent.getStringExtra("ITEM_OWNER_ID") ?: ""
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         val editItemBtn= findViewById<Button>(R.id.editItemBtn)
-        val chatBtn = findViewById<Button>(R.id.chatBtn)
-
+        editItemBtn.setOnClickListener {
+            if (uid == itemOwnerId) {
+                val intent = Intent(this, EItemActivity::class.java)
+                intent.putExtra("ITEM_ID", itemId)
+                startActivity(intent)
+            } else {
+                showError("이 아이템을 수정할 권한이 없습니다.")
+            }
+        }
 
 
     }

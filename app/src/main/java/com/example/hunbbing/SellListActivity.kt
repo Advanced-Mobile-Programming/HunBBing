@@ -202,8 +202,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                     val message = itemSnapshot.child("message").getValue(Long::class.java)?.toInt()?: "Default Name"
                     val tags = itemSnapshot.child("tags").getValue(String::class.java)?: "Default Name"
                     val userId = itemSnapshot.child("userId").getValue(String::class.java)?: "Default Name"
-                    val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
-                    val userName = sharedPref.getString("UserName","알 수 없음").toString()
+                    val userName = itemSnapshot.child("userName").getValue(String::class.java)?: "Default Name"
                     val item = BoardItem(
                         Uri.parse(imageUrl),
                         itemName,
