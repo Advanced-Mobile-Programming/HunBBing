@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -233,7 +235,18 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             (recyclerView.adapter as? BoardAdapter)?.updateItems(items)
         })
 
+        val radioGroup = findViewById<RadioGroup>(R.id.order)
 
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val radioButton = findViewById<RadioButton>(checkedId)
+            val selectedOption = radioButton.text.toString()
+            when(selectedOption)
+            {
+                "최신순"->viewModel.orderDate()
+                "이름순"->viewModel.orderName()
+                else->return@setOnCheckedChangeListener
+            }
+        }
 
         val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
         addbtn.setOnClickListener {
