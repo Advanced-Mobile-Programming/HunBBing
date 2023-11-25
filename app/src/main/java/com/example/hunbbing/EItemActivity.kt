@@ -55,22 +55,11 @@ class EItemActivity : AppCompatActivity() {
 
         plusbtn.setOnClickListener {
 
-            /*
-            if (selectedImgUri != null) {
-                uploadImageToFirebaseStorage()
-            } else {
-                Toast.makeText(this, "이미지를 선택해주세요", Toast.LENGTH_SHORT).show()
-            }*/
 
 
             updateItemToDatabase(itemId)
         }
 
-        /*
-        addImgbtn.setOnClickListener {
-            requestStoragePermission()
-            //selectImage()
-        }*/
 
     }
 

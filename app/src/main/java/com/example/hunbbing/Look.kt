@@ -3,11 +3,13 @@ package com.example.hunbbing
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -20,7 +22,7 @@ class Look : AppCompatActivity() {
         var imgUser = findViewById<ImageView>(R.id.imgUser)
 //        var imgLike = findViewById<ImageView>(R.id.imgLike)
 //        var imgMsg = findViewById<ImageView>(R.id.imgMsg)
-        var imgView = findViewById<ImageView>(R.id.product)
+        var imgView = findViewById<ImageView>(R.id.product) //이게 이미지임
         val name = findViewById<TextView>(R.id.product_name)
         val price = findViewById<TextView>(R.id.product_price)
         val intro = findViewById<TextView>(R.id.product_intro)
@@ -43,6 +45,13 @@ class Look : AppCompatActivity() {
             finish()
         }
 
+        val imageUrl = intent.getStringExtra("img") ?: ""
+
+
+        Glide.with(this)
+            .load(imageUrl)
+            .into(imgView)
+
         val itemId = intent.getStringExtra("ITEM_ID") ?: ""
         val itemOwnerId = intent.getStringExtra("ITEM_OWNER_ID") ?: ""
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -54,6 +63,7 @@ class Look : AppCompatActivity() {
                 intent.putExtra("ITEM_ID", itemId)
                 startActivity(intent)
             } else {
+                Log.d("LookActivity", "Item ID: $itemId, Item Owner ID: $itemOwnerId, User ID: $uid")
                 showError("이 아이템을 수정할 권한이 없습니다.")
             }
         }
