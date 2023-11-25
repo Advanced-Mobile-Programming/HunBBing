@@ -1,31 +1,28 @@
 package com.example.hunbbing
 
-import android.content.ContentUris
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.launch
 
 
 interface OnItemClickListener {
@@ -146,7 +143,33 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                 })
             }
         }
+        else{
+            val item = viewModel.items.value?.get(position)
+            item?.let { selectedItem ->
+                pushNextPage(selectedItem)
+            }
+        }
 
+    }
+
+    fun pushNextPage(item: BoardItem) {
+        val intent = Intent(this, Look::class.java).apply {
+            putExtra("name", item.name)
+            putExtra("img", item.img.toString())
+            putExtra("imgUser", item.imgUser.toString())
+            putExtra("imgLike", item.imgLike.toString())
+            putExtra("imgMsg", item.imgMsg.toString())
+            putExtra("price", item.price)
+            putExtra("intro", item.intro)
+            putExtra("tag", item.tag)
+            putExtra("owner", item.owner)
+            putExtra("msgState", item.msgState)
+            putExtra("message", item.message)
+            putExtra("like", item.like)
+            putExtra("likeState", item.likeState)
+            putExtra("state", item.state)
+        }
+        startActivity(intent)
     }
 
 
@@ -154,9 +177,44 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
 
-        Firebase.auth.currentUser ?: finish()
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("AddItems")
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // dataSnapshot 객체에 AddItems 아래의 모든 데이터가 포함됩니다.
+                for (itemSnapshot in dataSnapshot.children) {
 
-        // 가져오기 val imageRef1 = storageRef.child("images/computer_sangsangbugi.jpg")
+                    val itemId = itemSnapshot.child("itemId").getValue(String::class.java)?: "Default Name"
+                    val itemName = itemSnapshot.child("itemName").getValue(String::class.java)?: "Default Name"
+                    val itemInfo = itemSnapshot.child("itemInfo").getValue(String::class.java)?: "Defaul Name"
+                    val price = itemSnapshot.child("price").getValue(Long::class.java)?.toString()?: "Default Name"
+                    val message = itemSnapshot.child("message").getValue(Long::class.java)?.toInt()?: "Default Name"
+                    val tags = itemSnapshot.child("tags").getValue(String::class.java)?: "Default Name"
+                    val userId = itemSnapshot.child("userId").getValue(String::class.java)?: "Default Name"
+                    val userName= itemSnapshot.child("userName").getValue(String::class.java)?: "Default Name"
+                    val item = BoardItem(
+                        Uri.parse("android.resource://com.example.hunbbing/drawable/product"),
+                        itemName,
+                        Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
+                        Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
+                        Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
+                        price,
+                        itemInfo,
+                        tags,
+                        userName,
+                        msgState = true,
+                        5,
+                        5,
+                        false,
+                        "판매중")
+                    viewModel.addItem(item);
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 에러 처리를 합니다.
+            }
+        })
 
 
         val fragmentLogo = RogoBarFragment()
@@ -174,7 +232,16 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         viewModel.items.observe(this, Observer { items ->
             (recyclerView.adapter as? BoardAdapter)?.updateItems(items)
         })
+
+
+
+        val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
+        addbtn.setOnClickListener {
+            val intent = Intent(this, AddItemActivity::class.java)
+            startActivity(intent)
+
+        }
+
+
     }
 }
-
-

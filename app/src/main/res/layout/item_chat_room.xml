@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/chatRoom_user_icon" />
+        app:srcCompat="@drawable/chatroom_user_icon" />
 
     <TextView
         android:id="@+id/chatroom_user_name"

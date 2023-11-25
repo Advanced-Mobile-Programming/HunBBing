@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_tool_bar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+        />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/iv_back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="15dp"
+            android:text="상품 등록하기"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/constraint_tool_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addImgBtn"
+                android:layout_width="90dp"
+                android:layout_height="95dp"
+                android:background="@drawable/baseline_add_a_photo_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp" />
+
+            <ImageView
+                android:id="@+id/iv_selected_image"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@+id/addImgBtn"
+                app:layout_constraintStart_toEndOf="@+id/addImgBtn"
+                app:layout_constraintBottom_toBottomOf="@+id/addImgBtn"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상품명"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/addImgBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp"
+                />
+
+            <EditText
+                android:id="@+id/itemText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:hint="제목"
+                android:paddingLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <!--가격설정-->
+            <TextView
+                android:id="@+id/tv_set_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="가격"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/itemText"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/priceText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:hint="가격을 입력해주세요"
+                android:paddingLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_set_price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tv_set_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="태그"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/priceText"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/tagText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:hint="태그 입력 (예: 캠핑, 여행)"
+                android:paddingLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_set_tags"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <!--자세한 설명-->
+            <TextView
+                android:id="@+id/tv_set_explain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상품 설명"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/tagText"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/explainText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:hint="상품 설명을 입력해주세요!"
+                android:gravity="top"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_set_explain"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/plusbtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="#4CAF50"
+        android:text="상품 등록하기"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:cornerRadius="1dp"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
