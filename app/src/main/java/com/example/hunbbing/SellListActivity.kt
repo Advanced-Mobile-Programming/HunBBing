@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -48,8 +49,13 @@ data class BoardItem(
 )
 
 
-class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnItemClickListener) :
-    RecyclerView.Adapter<BoardAdapter.BoardViewHolder>() {
+class BoardAdapter(
+    val itemList: ArrayList<BoardItem>,
+    private val listener: OnItemClickListener
+) : RecyclerView.Adapter<BoardAdapter.BoardViewHolder>() {
+    var desiredWidth = 200 // 원하는 가로 크기 (픽셀 단위)
+    var desiredHeight = 200 // 원하는 세로 크기 (픽셀 단위)
+
     fun updateItems(newItems: List<BoardItem>) {
         itemList.clear()
         itemList.addAll(newItems)
@@ -64,7 +70,10 @@ class BoardAdapter(val itemList: ArrayList<BoardItem>,private val listener: OnIt
     }
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
-        holder.imgView.setImageURI(itemList[position].img)
+        Glide.with(holder.itemView.context)
+            .load(itemList[position].img)
+            .override(desiredWidth, desiredHeight) // 이미지 크기를 지정합니다.
+            .into(holder.imgView)
         holder.name.text = itemList[position].name
         holder.price.text = itemList[position].price
         holder.intro.text = itemList[position].intro
@@ -180,22 +189,23 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         setContentView(R.layout.activity_sell_list)
 
         val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("AddItems")
+        val myRef = database.getReference("addItems")
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // dataSnapshot 객체에 AddItems 아래의 모든 데이터가 포함됩니다.
                 for (itemSnapshot in dataSnapshot.children) {
-
+                    val imageUrl = itemSnapshot.child("imageUrl").getValue(String::class.java) ?: "기본 이미지 URL"
                     val itemId = itemSnapshot.child("itemId").getValue(String::class.java)?: "Default Name"
-                    val itemName = itemSnapshot.child("itemName").getValue(String::class.java)?: "Default Name"
-                    val itemInfo = itemSnapshot.child("itemInfo").getValue(String::class.java)?: "Defaul Name"
+                    val itemName = itemSnapshot.child("name").getValue(String::class.java)?: "Default Name"
+                    val itemInfo = itemSnapshot.child("description").getValue(String::class.java)?: "Defaul Name"
                     val price = itemSnapshot.child("price").getValue(Long::class.java)?.toString()?: "Default Name"
                     val message = itemSnapshot.child("message").getValue(Long::class.java)?.toInt()?: "Default Name"
                     val tags = itemSnapshot.child("tags").getValue(String::class.java)?: "Default Name"
                     val userId = itemSnapshot.child("userId").getValue(String::class.java)?: "Default Name"
-                    val userName= itemSnapshot.child("userName").getValue(String::class.java)?: "Default Name"
+                    val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+                    val userName = sharedPref.getString("UserName","알 수 없음").toString()
                     val item = BoardItem(
-                        Uri.parse("android.resource://com.example.hunbbing/drawable/product"),
+                        Uri.parse(imageUrl),
                         itemName,
                         Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
                         Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
@@ -229,6 +239,8 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             layoutManager = LinearLayoutManager(this@SellListActivity)
             adapter = BoardAdapter(ArrayList(), this@SellListActivity)
         }
+        (recyclerView.adapter as? BoardAdapter)?.desiredWidth = 200
+        (recyclerView.adapter as? BoardAdapter)?.desiredHeight = 200
 
         // LiveData 관찰
         viewModel.items.observe(this, Observer { items ->

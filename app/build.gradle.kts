@@ -58,6 +58,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-crashlytics:18.2.6")
     implementation ("androidx.activity:activity-ktx:1.1.0")
     implementation ("androidx.fragment:fragment-ktx:1.2.5")
+    implementation ("com.github.bumptech.glide:glide:4.12.0") // 현재 버전 확인 필요
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.google.firebase:firebase-database:20.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
