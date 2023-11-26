@@ -59,11 +59,6 @@ class Look : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         database = FirebaseDatabase.getInstance().reference
 
-        Log.i("Look", itemOwnerId)
-        Log.i("Look", itemId)
-        Log.i("Look", uid)
-        Log.i("Look", database.child("user").child(uid).child("chatRooms").toString())
-
         val editItemBtn= findViewById<Button>(R.id.editItemBtn)
         editItemBtn.setOnClickListener {
             if (uid == itemOwnerId) {
@@ -87,8 +82,8 @@ class Look : AppCompatActivity() {
                     val chatRoomId =
                         database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
                             .push().key.toString()
-                    database.child("user").child(uid).child("chatRooms").child(itemOwnerId).child("chatId").setValue(chatRoomId.toString())
-                    database.child("user").child(itemOwnerId).child("chatRooms").child(uid).child("chatId").setValue(chatRoomId.toString())
+                    database.child("user").child(uid).child("chatRooms").child(itemOwnerId).child("chatRoomId").setValue(chatRoomId.toString())
+                    database.child("user").child(itemOwnerId).child("chatRooms").child(uid).child("chatRoomId").setValue(chatRoomId.toString())
                     database.child("chatRooms").child(chatRoomId).child("lastChat").setValue("아직 채팅이 없습니다.")
                     val chatId = database.child("chatRooms").child(chatRoomId).child("chatId").push().key
                     database.child("chatRooms").child(chatRoomId).child("chatId").setValue(chatId)
@@ -99,13 +94,9 @@ class Look : AppCompatActivity() {
                 var chatId : String? = null
 
                 val chatRoomRef : DatabaseReference = database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
-                Log.i("ref", chatRoomRef.toString())
                 chatRoomRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        Log.i("aa", dataSnapshot.value.toString())
-                        Log.i("aa", dataSnapshot.childrenCount.toString())
                         for (childSnapshot in dataSnapshot.children) {
-                            Log.i("aa", childSnapshot.value.toString())
                             chatRoomId = childSnapshot.value.toString()
                         }
                         if(chatRoomId != null) {
@@ -149,7 +140,6 @@ class Look : AppCompatActivity() {
     // Firebase 데이터 존재 여부를 확인하는 함수
     private fun isChatRoomExists(parentPath: String, childKey: String, callback: (Boolean) -> Unit) {
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("$parentPath/$childKey")
-        Log.i("Look", databaseReference.toString())
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // 데이터 스냅샷이 존재하면 해당 데이터가 존재하는 것으로 간주

@@ -47,7 +47,6 @@ class ChatActivity : AppCompatActivity() {
         chatId = intent.getStringExtra("chatId").toString()
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
 
-        Log.i("Chat", receiverName + " " + receiverUid + " " + chatId + " " + chatRoomId)
 
         auth = FirebaseAuth.getInstance()
         DBref = FirebaseDatabase.getInstance().reference
@@ -89,9 +88,6 @@ class ChatActivity : AppCompatActivity() {
                         messageList.add(message!!)
                     }
 
-                    for(messages in messageList){
-                        Log.i("message", messages.toString())
-                    }
                     messageAdapter.notifyDataSetChanged()
                 }
 
