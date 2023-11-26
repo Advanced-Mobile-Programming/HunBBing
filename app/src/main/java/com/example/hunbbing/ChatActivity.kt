@@ -89,6 +89,8 @@ class ChatActivity : AppCompatActivity() {
                     }
 
                     messageAdapter.notifyDataSetChanged()
+                    val lastIndex = messageAdapter.itemCount - 1
+                    binding.chatRecyclerView.scrollToPosition(lastIndex)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
