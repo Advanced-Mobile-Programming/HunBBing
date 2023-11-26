@@ -40,7 +40,7 @@ class EItemActivity : AppCompatActivity() {
         plusbtn = findViewById(R.id.plusbtn)
 
 
-        DbR = FirebaseDatabase.getInstance().getReference("AddItems")
+        DbR = FirebaseDatabase.getInstance().getReference("addItems")
 
         val backButton = findViewById<ImageView>(R.id.iv_back)
         backButton.setOnClickListener {
