@@ -91,6 +91,8 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     private fun saveItemData(imageUrl: String) {
+        val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        val userName = sharedPref.getString("UserName", "알 수 없음")
         val itemName = item.text.toString().trim()
         val itemPrice = price.text.toString().trim().toIntOrNull()
         val itemDescription = explain.text.toString().trim()
@@ -98,6 +100,7 @@ class AddItemActivity : AppCompatActivity() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         val newItem = hashMapOf(
+            "userName" to userName,
             "name" to itemName,
             "price" to itemPrice,
             "description" to itemDescription,
@@ -108,11 +111,14 @@ class AddItemActivity : AppCompatActivity() {
 
         val itemId = databaseReference.push().key ?: return
         databaseReference.child(itemId).setValue(newItem).addOnSuccessListener {
+            val intent = Intent(this, SellListActivity::class.java)
+            intent.putExtra("ITEM_ID", itemId) // 아이템 ID 전달
+            startActivity(intent)
             Toast.makeText(this, "상품이 등록되었습니다.", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, SellListActivity::class.java))
         }.addOnFailureListener {
             showError("상품 등록에 실패했습니다.")
         }
+
     }
 
     private fun showError(message: String) {

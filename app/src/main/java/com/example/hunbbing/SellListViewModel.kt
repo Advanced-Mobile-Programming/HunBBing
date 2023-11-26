@@ -29,6 +29,7 @@ class SellListViewModel : ViewModel() {
             5,
             false,
             "판매종료",
+            "",
             ""
         ),
         // 추가 아이템...

@@ -47,10 +47,10 @@ class ChatActivity : AppCompatActivity() {
         chatId = intent.getStringExtra("chatId").toString()
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
 
+        Log.i("Chat", receiverName + " " + receiverUid + " " + chatId + " " + chatRoomId)
+
         auth = FirebaseAuth.getInstance()
         DBref = FirebaseDatabase.getInstance().reference
-
-        supportActionBar?.title = receiverName
 
         // 현재 접속자 Uid
         val senderUid = auth.currentUser?.uid
@@ -59,22 +59,14 @@ class ChatActivity : AppCompatActivity() {
         binding.sendBtn.setOnClickListener{
 
             val message = binding.messageEdit.text.toString()
-            val messageObject = ChatMessage(message, senderUid, System.currentTimeMillis())
+            val messageObject = ChatMessage(senderUid, message, System.currentTimeMillis())
 
             // 데이터 저장
             DBref.child("chats").child(chatId).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
                     // 저장 성공하면
                     Log.i("message", "메세지 전송 성공")
-                    DBref.child("chats").child("chatRooms").child(chatRoomId).child("lastChat").setValue(message).addOnCompleteListener({
-                        task ->
-                        if(task.isSuccessful){
-                            Log.i("chatRoom", "lastChat 변경 성공")
-                        }
-                        else{
-                            Log.e("chatRoom", "lastChat 변경 실패")
-                        }
-                    })
+                    DBref.child("chatRooms").child(chatRoomId).child("lastChat").setValue(message)
                 }
 
             //입력값 초기화
@@ -90,6 +82,10 @@ class ChatActivity : AppCompatActivity() {
                     for(postSnapShot in snapshot.children){
                         val message = postSnapShot.getValue(ChatMessage::class.java)
                         messageList.add(message!!)
+                    }
+
+                    for(messages in messageList){
+                        Log.i("message", messages.toString())
                     }
                     messageAdapter.notifyDataSetChanged()
                 }
