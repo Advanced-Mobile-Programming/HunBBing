@@ -10,14 +10,15 @@
 
 
     <!-- 입력 레이아웃 -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/input_layout"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="-49dp" />
 
     <LinearLayout
         android:id="@+id/input_layout"
@@ -49,6 +50,43 @@
             android:textColor="@color/white"
             />
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/receiver_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="receiver_name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_back"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_alignTop="@+id/chat_recyclerView"
+        android:layout_marginTop="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/chat_recyclerView" />
 
 
 </RelativeLayout>

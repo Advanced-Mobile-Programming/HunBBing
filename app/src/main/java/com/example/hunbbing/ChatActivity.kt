@@ -55,6 +55,11 @@ class ChatActivity : AppCompatActivity() {
         // 현재 접속자 Uid
         val senderUid = auth.currentUser?.uid
 
+        binding.receiverNameTv.text = receiverName
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+
         // 메세지 전송 버튼 이벤트
         binding.sendBtn.setOnClickListener{
 
