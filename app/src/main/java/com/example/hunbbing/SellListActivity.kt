@@ -185,8 +185,6 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         }
         startActivity(intent)
     }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
@@ -270,9 +268,13 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         addbtn.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
             startActivity(intent)
-
         }
 
+        val chatRoombtn = findViewById<FloatingActionButton>(R.id.chattingroom_btn)
+        chatRoombtn.setOnClickListener{
+            val intent = Intent(this, ChatRoomActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 }

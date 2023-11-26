@@ -1,6 +1,7 @@
 package com.example.hunbbing
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,5 +34,15 @@ RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder>(){
         val curChatRoom = chatRoomList[position]
         holder.nameText.text = curChatRoom.chatUserName
         holder.lastChat.text = curChatRoom.lastChat
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("name", curChatRoom.chatUserName)
+            intent.putExtra("chatId", curChatRoom.chatId)
+            intent.putExtra("chatRoomId", curChatRoom.chatRoomId)
+            intent.putExtra("uId", curChatRoom.receiverUid)
+
+            context.startActivity(intent)
+        }
     }
 }
