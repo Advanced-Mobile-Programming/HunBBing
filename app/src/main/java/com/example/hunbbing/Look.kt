@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Spinner
@@ -39,6 +42,25 @@ class Look : AppCompatActivity() {
 //        message.setText(intent.getStringExtra("message"))
 //        like.setText(intent.getStringExtra("like"))
 //        state.setText(intent.getStringExtra("state"))
+        var pr_st = true
+        val state_sp = findViewById<Spinner>(R.id.product_state)
+        val array_pr = resources.getStringArray(R.array.product_state)
+        val adapter_sp = ArrayAdapter(this,android.R.layout.simple_list_item_1,array_pr)
+        state_sp.adapter = adapter_sp
+        state_sp.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                when(array_pr[p2]){
+                    "판매중" -> pr_st = true
+                    "판매 완료" -> pr_st = false
+                    else -> finish()
+                }
+            }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+            }
+
+        }
 
         val backButton = findViewById<ImageView>(R.id.back_btn)
         backButton.setOnClickListener {
@@ -59,8 +81,9 @@ class Look : AppCompatActivity() {
         val editItemBtn= findViewById<Button>(R.id.editItemBtn)
         editItemBtn.setOnClickListener {
             if (uid == itemOwnerId) {
-                val intent = Intent(this, EItemActivity::class.java)
+                val intent = Intent(this, SellListActivity::class.java)
                 intent.putExtra("ITEM_ID", itemId)
+                intent.putExtra("product_st",pr_st)
                 startActivity(intent)
             } else {
                 Log.d("LookActivity", "Item ID: $itemId, Item Owner ID: $itemOwnerId, User ID: $uid")
