@@ -85,77 +85,92 @@ class Look : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         database = FirebaseDatabase.getInstance().reference
 
-        val editItemBtn= findViewById<Button>(R.id.editItemBtn)
-        editItemBtn.setOnClickListener {
-            if (uid == itemOwnerId) {
-                val intent = Intent(this, EItemActivity::class.java)
-                intent.putExtra("itemId", itemId)
-                intent.putExtra("product_st",pr_st)
-                startActivity(intent)
-            } else {
-                Log.d("LookActivity", "Item ID: $itemId, Item Owner ID: $itemOwnerId, User ID: $uid")
-                showError("이 아이템을 수정할 권한이 없습니다.")
-            }
-        }
-
+        val editItemBtn = findViewById<Button>(R.id.editItemBtn)
         val chatBtn = findViewById<Button>(R.id.chatBtn)
-
-        chatBtn.setOnClickListener {
-            // 채팅방이 없는 경우 채팅방 생성
-            val intent = Intent(this, ChatActivity::class.java)
-            isChatRoomExists("user/$uid/chatRooms", itemOwnerId){
-                result ->
-                if(!result){
-                    Log.i("Look", "채팅방이 존재하지 않아 채팅방을 새로 생성합니다.")
-                    val chatRoomId =
-                        database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
-                            .push().key.toString()
-                    database.child("user").child(uid).child("chatRooms").child(itemOwnerId).child("chatRoomId").setValue(chatRoomId.toString())
-                    database.child("user").child(itemOwnerId).child("chatRooms").child(uid).child("chatRoomId").setValue(chatRoomId.toString())
-                    database.child("chatRooms").child(chatRoomId).child("lastChat").setValue("아직 채팅이 없습니다.")
-                    val chatId = database.child("chatRooms").child(chatRoomId).child("chatId").push().key
-                    database.child("chatRooms").child(chatRoomId).child("chatId").setValue(chatId)
-                    Log.i("Look", "채팅방 생성 성공")
+        // 사용자가 올린 상품이라면 수정 버튼 활성화
+        if(uid == ownerUid) {
+            chatBtn.visibility = View.GONE
+            editItemBtn.setOnClickListener {
+                if (uid == itemOwnerId) {
+                    val intent = Intent(this, EItemActivity::class.java)
+                    intent.putExtra("itemId", itemId)
+                    intent.putExtra("product_st", pr_st)
+                    startActivity(intent)
+                } else {
+                    Log.d(
+                        "LookActivity",
+                        "Item ID: $itemId, Item Owner ID: $itemOwnerId, User ID: $uid"
+                    )
+                    showError("이 아이템을 수정할 권한이 없습니다.")
                 }
-                // 넘길 데이터
-                var chatRoomId : String? = null
-                var chatId : String? = null
-
-                val chatRoomRef : DatabaseReference = database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
-                chatRoomRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        for (childSnapshot in dataSnapshot.children) {
-                            chatRoomId = childSnapshot.value.toString()
-                        }
-                        if(chatRoomId != null) {
-                            database.child("chatRooms").child(chatRoomId!!).child("chatId")
-                                .addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                        chatId = dataSnapshot.value.toString()
-                                        intent.putExtra("name", ownerName)
-                                        intent.putExtra("uId", itemOwnerId)
-                                        intent.putExtra("chatId", chatId)
-                                        intent.putExtra("chatRoomId", chatRoomId)
-
-                                        // 채팅 액티비티로 전송
-
-                                        startActivity(intent)
-                                    }
-                                    override fun onCancelled(databaseError: DatabaseError) {
-                                        // 데이터 읽기 실패
-
-                                    }
-                                })
-                        }
-                    }
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // 데이터 읽기 실패
-
-                    }
-                })
             }
         }
+        // 아니면 채팅 버튼 활성화
+        else {
+            editItemBtn.visibility = View.GONE
+            chatBtn.setOnClickListener {
+                // 채팅방이 없는 경우 채팅방 생성
+                val intent = Intent(this, ChatActivity::class.java)
+                isChatRoomExists("user/$uid/chatRooms", itemOwnerId) { result ->
+                    if (!result) {
+                        Log.i("Look", "채팅방이 존재하지 않아 채팅방을 새로 생성합니다.")
+                        val chatRoomId =
+                            database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
+                                .push().key.toString()
+                        database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
+                            .child("chatRoomId").setValue(chatRoomId.toString())
+                        database.child("user").child(itemOwnerId).child("chatRooms").child(uid)
+                            .child("chatRoomId").setValue(chatRoomId.toString())
+                        database.child("chatRooms").child(chatRoomId).child("lastChat")
+                            .setValue("아직 채팅이 없습니다.")
+                        val chatId =
+                            database.child("chatRooms").child(chatRoomId).child("chatId").push().key
+                        database.child("chatRooms").child(chatRoomId).child("chatId")
+                            .setValue(chatId)
+                        Log.i("Look", "채팅방 생성 성공")
+                    }
+                    // 넘길 데이터
+                    var chatRoomId: String? = null
+                    var chatId: String? = null
 
+                    val chatRoomRef: DatabaseReference =
+                        database.child("user").child(uid).child("chatRooms").child(itemOwnerId)
+                    chatRoomRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (childSnapshot in dataSnapshot.children) {
+                                chatRoomId = childSnapshot.value.toString()
+                            }
+                            if (chatRoomId != null) {
+                                database.child("chatRooms").child(chatRoomId!!).child("chatId")
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                            chatId = dataSnapshot.value.toString()
+                                            intent.putExtra("name", ownerName)
+                                            intent.putExtra("uId", itemOwnerId)
+                                            intent.putExtra("chatId", chatId)
+                                            intent.putExtra("chatRoomId", chatRoomId)
+
+                                            // 채팅 액티비티로 전송
+
+                                            startActivity(intent)
+                                        }
+
+                                        override fun onCancelled(databaseError: DatabaseError) {
+                                            // 데이터 읽기 실패
+
+                                        }
+                                    })
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // 데이터 읽기 실패
+
+                        }
+                    })
+                }
+            }
+        }
     }
 
     private fun showError(message: String) {

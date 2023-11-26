@@ -28,15 +28,19 @@
         android:orientation="horizontal"
         android:layout_marginBottom="10dp"
         android:weightSum="100">
+
         <EditText
             android:id="@+id/message_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="85"
             android:background="@drawable/chat_background"
             android:hint="메시지를 입력하세요"
-            android:paddingStart="20dp"/>
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="10dp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/send_btn"
