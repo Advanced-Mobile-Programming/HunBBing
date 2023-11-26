@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModel
 class SellListViewModel : ViewModel() {
     private val _items = MutableLiveData<List<BoardItem>>()
     val items: LiveData<List<BoardItem>> get() = _items
+
     private val _barState = MutableLiveData<Boolean>()
     val barState: LiveData<Boolean> get() = _barState
+
     private val originalList = mutableListOf<BoardItem>(
         // 여기에 초기 데이터 아이템 추가
         BoardItem(
@@ -66,6 +68,10 @@ class SellListViewModel : ViewModel() {
 
     fun orderDate (){
         _items.value = originalList
+    }
+
+    fun stateChange(){
+
     }
     fun searchProduct(query: String) {
         val filteredList = if (query.isEmpty()) {

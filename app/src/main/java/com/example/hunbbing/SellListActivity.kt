@@ -211,7 +211,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                         Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
                         Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
                         Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
-                        price,
+                        price+"원",
                         itemInfo,
                         tags,
                         userName,
@@ -275,6 +275,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             val intent = Intent(this, ChatRoomActivity::class.java)
             startActivity(intent)
         }
+
 
     }
 }
