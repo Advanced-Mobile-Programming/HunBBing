@@ -44,6 +44,10 @@ class AddItemActivity : AppCompatActivity() {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("addItems")
 
+        findViewById<ImageView>(R.id.iv_back).setOnClickListener {
+            finish()
+        }
+
         addImgbtn.setOnClickListener {
             openGalleryForImage()
         }
