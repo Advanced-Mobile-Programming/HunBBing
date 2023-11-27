@@ -56,8 +56,17 @@ class Look : AppCompatActivity() {
 
         val state_sp = findViewById<Spinner>(R.id.product_state)
         val array_pr = resources.getStringArray(R.array.product_state)
-        val adapter_sp = ArrayAdapter(this,android.R.layout.simple_list_item_1,array_pr)
+        val adapter_sp = ArrayAdapter(this, android.R.layout.simple_spinner_item, array_pr)
+        adapter_sp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         state_sp.adapter = adapter_sp
+
+        // 인텐트에서 "state" 값을 가져옵니다.
+        val initialState = intent.getStringExtra("state") ?: array_pr[0] // 기본값 설정
+        // ArrayAdapter에서 이 값의 인덱스를 찾습니다.
+        val spinnerPosition = adapter_sp.getPosition(initialState)
+        // 스피너의 선택을 해당 인덱스로 설정합니다.
+        state_sp.setSelection(spinnerPosition, false)
+
         state_sp.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 when(array_pr[p2]){
@@ -67,8 +76,8 @@ class Look : AppCompatActivity() {
                 }
             }
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    TODO("Not yet implemented")
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
             }
 
         }
@@ -104,6 +113,7 @@ class Look : AppCompatActivity() {
                     resultIntent.putExtra("editOwner", ownerName)
                     resultIntent.putExtra("editOwnerUid", ownerUid)
                     resultIntent.putExtra("position", position)
+                    resultIntent.putExtra("imgUrl", imageUrl)
                     setResult(Activity.RESULT_OK, resultIntent)
                     finish()
                 } else {

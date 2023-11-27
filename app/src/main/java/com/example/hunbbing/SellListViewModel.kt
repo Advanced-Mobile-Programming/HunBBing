@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.database.FirebaseDatabase
 
 
 class SellListViewModel : ViewModel() {
@@ -41,7 +42,9 @@ class SellListViewModel : ViewModel() {
         originalList.add(0, item)
         _items.value = originalList.toList()
     }
-
+    fun f5(){
+        _items.value = originalList.toList()
+    }
 
     fun updateItem(
         state: String,
@@ -50,12 +53,10 @@ class SellListViewModel : ViewModel() {
         intro: String,
         tag: String,
         uid: String,
-        position: Int
+        position: Int,
+        itemId: String
     ) {
-        // 리스트 내 해당 아이템 위치 찾기
         val item = originalList.getOrNull(position)
-
-        // 아이템이 존재하면 업데이트
         item?.let {
             it.state = state
             it.name = name
@@ -63,10 +64,15 @@ class SellListViewModel : ViewModel() {
             it.intro = intro
             it.tag = tag
             it.ownerUid = uid
-
+            Log.d("에",itemId)
+            Log.d("에w",state)
+            val itemRef = FirebaseDatabase.getInstance().getReference("addItems").child(itemId)
+            itemRef.child("state").setValue(state)
             _items.value = originalList.toList()
         }
     }
+
+
     init {
         // 초기 데이터 로드
         _items.value = originalList
@@ -94,8 +100,13 @@ class SellListViewModel : ViewModel() {
         _items.value = originalList
     }
 
-    fun stateChange(){
-
+    fun onSale(){
+        val filteredList = originalList.filter { it.state.contains("판매중") }
+        _items.value = filteredList
+    }
+    fun soldOut(){
+        val filteredList = originalList.filter { it.state.contains("판매 완료") }
+        _items.value = filteredList
     }
     fun searchProduct(query: String) {
         val filteredList = if (query.isEmpty()) {

@@ -177,23 +177,32 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK) {
             data?.let {
-                val state = it.getStringExtra("product_st")
-                val name = it.getStringExtra("editName")
-                val price = it.getStringExtra("editPrice")
-                val intro = it.getStringExtra("editIntro")
-                val tag = it.getStringExtra("editTag")
-                val ownerUid = it.getStringExtra("editOwnerUid")
-                val pos = it.getStringExtra("position")?.toInt()
+                val state = it.getStringExtra("product_st")?:""
+                val name = it.getStringExtra("editName")?:""
+                val price = it.getStringExtra("editPrice")?:""
+                val intro = it.getStringExtra("editIntro")?:""
+                val tag = it.getStringExtra("editTag")?:""
+                val ownerUid = it.getStringExtra("editOwnerUid")?:""
+                val pos = it.getStringExtra("position")?.toInt()?:0
+                val itemId = it.getStringExtra("itemId")?:"" // 상품의 고유 ID 또는 식별자
+                Log.d(" 값",state.toString())
+                Log.d(" 값",itemId.toString())
 
-                if (state != null && name != null && price != null && intro != null && tag != null && ownerUid != null && pos != null) {
-                    viewModel.updateItem(state, name, price, intro, tag, ownerUid, pos)
-                }
-                val itemId = it.getStringExtra("itemId") // 상품의 고유 ID 또는 식별자
 
-                if (state != null && itemId != null) {
+
                     val itemRef = myRef.child(itemId) // 여기서 'itemId'는 업데이트하려는 항목의 ID입니다.
                     itemRef.child("state").setValue(state)
-                }
+                    viewModel.updateItem(
+                        state,
+                        name,
+                        price,
+                        intro,
+                        tag,
+                        ownerUid,
+                        pos,
+                        itemId
+                    )
+
 
 
             }
@@ -281,6 +290,9 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                         )
                         viewModel.addItem(item)
                     }
+                    else{
+                        viewModel.f5()
+                    }
                 }
             }
 
@@ -317,6 +329,8 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             {
                 "최신순"->viewModel.orderDate()
                 "이름순"->viewModel.orderName()
+                "판매중" -> viewModel.onSale()
+                "판매 완료"->viewModel.soldOut()
                 else->return@setOnCheckedChangeListener
             }
         }
