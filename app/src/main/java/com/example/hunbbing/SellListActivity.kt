@@ -227,41 +227,60 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
         val database = FirebaseDatabase.getInstance()
+        val addedItemIds = mutableSetOf<String>()
+
         val myRef = database.getReference("addItems")
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // dataSnapshot 객체에 AddItems 아래의 모든 데이터가 포함됩니다.
                 for (itemSnapshot in dataSnapshot.children) {
+
                     val itemId = itemSnapshot.key ?: "Default Name"
-                    val imageUrl = itemSnapshot.child("imageUrl").getValue(String::class.java) ?: "기본 이미지 URL"
-                    val itemName = itemSnapshot.child("name").getValue(String::class.java)?: "Default Name"
-                    val itemInfo = itemSnapshot.child("description").getValue(String::class.java)?: "Defaul Name"
-                    val price = itemSnapshot.child("price").getValue(Long::class.java)?.toString()?: "Default Name"
-                    val message = itemSnapshot.child("message").getValue(Long::class.java)?.toInt()?: "Default Name"
-                    val tags = itemSnapshot.child("tags").getValue(String::class.java)?: "Default Name"
-                    val userId = itemSnapshot.child("userId").getValue(String::class.java)?: "Default Name"
-                    val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
-                    val state =  itemSnapshot.child("state").getValue(String::class.java)?: "Default Name"
-                    val userName = itemSnapshot.child("userName").getValue(String::class.java)?: "Default Name"
-                    val item = BoardItem(
-                        Uri.parse(imageUrl),
-                        itemName,
-                        Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
-                        Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
-                        Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
-                        price+"원",
-                        itemInfo,
-                        tags,
-                        userName,
-                        msgState = true,
-                        5,
-                        5,
-                        false,
-                        state,
-                        userId,
-                        itemId
+                    if (!addedItemIds.contains(itemId)) {
+                        // 중복되지 않은 경우에만 아이템을 추가합니다.
+                        addedItemIds.add(itemId)
+                        val imageUrl = itemSnapshot.child("imageUrl").getValue(String::class.java)
+                            ?: "기본 이미지 URL"
+                        val itemName = itemSnapshot.child("name").getValue(String::class.java)
+                            ?: "Default Name"
+                        val itemInfo =
+                            itemSnapshot.child("description").getValue(String::class.java)
+                                ?: "Defaul Name"
+                        val price =
+                            itemSnapshot.child("price").getValue(Long::class.java)?.toString()
+                                ?: "Default Name"
+                        val message =
+                            itemSnapshot.child("message").getValue(Long::class.java)?.toInt()
+                                ?: "Default Name"
+                        val tags = itemSnapshot.child("tags").getValue(String::class.java)
+                            ?: "Default Name"
+                        val userId = itemSnapshot.child("userId").getValue(String::class.java)
+                            ?: "Default Name"
+                        val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+                        val state = itemSnapshot.child("state").getValue(String::class.java)
+                            ?: "Default Name"
+                        val userName = itemSnapshot.child("userName").getValue(String::class.java)
+                            ?: "Default Name"
+                        val item = BoardItem(
+                            Uri.parse(imageUrl),
+                            itemName,
+                            Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
+                            Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
+                            Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
+                            price + "원",
+                            itemInfo,
+                            tags,
+                            userName,
+                            msgState = true,
+                            5,
+                            5,
+                            false,
+                            state,
+                            userId,
+                            itemId
                         )
-                        viewModel.addItem(item);
+                        viewModel.addItem(item)
+                    }
                 }
             }
 
