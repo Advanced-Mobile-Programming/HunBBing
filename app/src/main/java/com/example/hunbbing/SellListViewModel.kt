@@ -1,10 +1,10 @@
 package com.example.hunbbing
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 
 
 class SellListViewModel : ViewModel() {
@@ -30,7 +30,7 @@ class SellListViewModel : ViewModel() {
             5,
             5,
             false,
-            "판매종료",
+            "판매중",
             "",
             ""
         ),
@@ -43,6 +43,30 @@ class SellListViewModel : ViewModel() {
     }
 
 
+    fun updateItem(
+        state: String,
+        name: String,
+        price: String,
+        intro: String,
+        tag: String,
+        uid: String,
+        position: Int
+    ) {
+        // 리스트 내 해당 아이템 위치 찾기
+        val item = originalList.getOrNull(position)
+
+        // 아이템이 존재하면 업데이트
+        item?.let {
+            it.state = state
+            it.name = name
+            it.price = price
+            it.intro = intro
+            it.tag = tag
+            it.ownerUid = uid
+
+            _items.value = originalList.toList()
+        }
+    }
     init {
         // 초기 데이터 로드
         _items.value = originalList

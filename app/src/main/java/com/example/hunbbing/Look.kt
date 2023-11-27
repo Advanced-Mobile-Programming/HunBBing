@@ -1,5 +1,6 @@
 package com.example.hunbbing
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -37,7 +38,7 @@ class Look : AppCompatActivity() {
         val intro = findViewById<TextView>(R.id.product_intro)
         val tag = findViewById<TextView>(R.id.product_tag)
         val owner = findViewById<TextView>(R.id.product_owner)
-
+        val position = intent.getIntExtra("pos",0)
 //        val message = findViewById<TextView>(R.id.product_message)
 //        val like = findViewById<TextView>(R.id.product_like)
 //        val state = findViewById<Spinner>(R.id.product_state)
@@ -51,7 +52,8 @@ class Look : AppCompatActivity() {
 //        message.setText(intent.getStringExtra("message"))
 //        like.setText(intent.getStringExtra("like"))
 //        state.setText(intent.getStringExtra("state"))
-        var pr_st = true
+        var pr_st = intent.getStringExtra("state")
+
         val state_sp = findViewById<Spinner>(R.id.product_state)
         val array_pr = resources.getStringArray(R.array.product_state)
         val adapter_sp = ArrayAdapter(this,android.R.layout.simple_list_item_1,array_pr)
@@ -59,8 +61,8 @@ class Look : AppCompatActivity() {
         state_sp.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 when(array_pr[p2]){
-                    "판매중" -> pr_st = true
-                    "판매 완료" -> pr_st = false
+                    "판매중" -> pr_st = "판매중"
+                    "판매 완료" -> pr_st = "판매 완료"
                     else -> finish()
                 }
             }
@@ -92,10 +94,18 @@ class Look : AppCompatActivity() {
             chatBtn.visibility = View.GONE
             editItemBtn.setOnClickListener {
                 if (uid == itemOwnerId) {
-                    val intent = Intent(this, EItemActivity::class.java)
-                    intent.putExtra("itemId", itemId)
-                    intent.putExtra("product_st", pr_st)
-                    startActivity(intent)
+                    val resultIntent = Intent()
+                    resultIntent.putExtra("itemId", itemId)
+                    resultIntent.putExtra("product_st", pr_st)
+                    resultIntent.putExtra("editName", name.text.toString())
+                    resultIntent.putExtra("editPrice", price.text.toString())
+                    resultIntent.putExtra("editIntro", intro.text.toString())
+                    resultIntent.putExtra("editTag", tag.text.toString())
+                    resultIntent.putExtra("editOwner", ownerName)
+                    resultIntent.putExtra("editOwnerUid", ownerUid)
+                    resultIntent.putExtra("position", position)
+                    setResult(Activity.RESULT_OK, resultIntent)
+                    finish()
                 } else {
                     Log.d(
                         "LookActivity",

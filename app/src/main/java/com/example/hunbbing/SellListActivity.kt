@@ -1,5 +1,6 @@
 package com.example.hunbbing
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
@@ -33,20 +35,20 @@ interface OnItemClickListener {
 }
 data class BoardItem(
     val img: Uri?,
-    val name: String,
+    var name: String,
     val imgUser: Uri?,
     val imgLike: Uri?,
     val imgMsg: Uri?,
-    val price: String,
-    val intro: String,
-    val tag: String,
+    var price: String,
+    var intro: String,
+    var tag: String,
     val owner: String,
     val msgState: Boolean,
     val message: Int,
     val like: Int,
     val likeState: Boolean,
-    val state: String,
-    val ownerUid: String,
+    var state: String,
+    var ownerUid: String,
     val itemId: String
 )
 
@@ -118,6 +120,12 @@ class BoardAdapter(
 class SellListActivity : AppCompatActivity() , OnItemClickListener {
 
     private val viewModel by viewModels<SellListViewModel>()
+    private lateinit var databaseReference: DatabaseReference
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.getReference("addItems")
+    companion object {
+        private const val REQUEST_CODE_EDIT = 1 // 요청 코드 상수 정의
+    }
     lateinit var storage: FirebaseStorage
 
     override fun onItemClicked(position: Int) {
@@ -158,13 +166,41 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         else{
             val item = viewModel.items.value?.get(position)
             item?.let { selectedItem ->
-                pushNextPage(selectedItem)
+                pushNextPage(selectedItem,position)
             }
         }
 
     }
 
-    fun pushNextPage(item: BoardItem) {
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                val state = it.getStringExtra("product_st")
+                val name = it.getStringExtra("editName")
+                val price = it.getStringExtra("editPrice")
+                val intro = it.getStringExtra("editIntro")
+                val tag = it.getStringExtra("editTag")
+                val ownerUid = it.getStringExtra("editOwnerUid")
+                val pos = it.getStringExtra("position")?.toInt()
+
+                if (state != null && name != null && price != null && intro != null && tag != null && ownerUid != null && pos != null) {
+                    viewModel.updateItem(state, name, price, intro, tag, ownerUid, pos)
+                }
+                val itemId = it.getStringExtra("itemId") // 상품의 고유 ID 또는 식별자
+
+                if (state != null && itemId != null) {
+                    val itemRef = myRef.child(itemId) // 여기서 'itemId'는 업데이트하려는 항목의 ID입니다.
+                    itemRef.child("state").setValue(state)
+                }
+
+
+            }
+        }
+    }
+
+    fun pushNextPage(item: BoardItem,position: Int) {
         val intent = Intent(this, Look::class.java).apply {
             putExtra("name", item.name)
             putExtra("img", item.img.toString())
@@ -182,13 +218,14 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             putExtra("state", item.state)
             putExtra("ownerUid", item.ownerUid)
             putExtra("itemId", item.itemId)
+            putExtra("pos",position)
         }
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE_EDIT)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
-
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("addItems")
         myRef.addValueEventListener(object : ValueEventListener {
@@ -204,6 +241,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                     val tags = itemSnapshot.child("tags").getValue(String::class.java)?: "Default Name"
                     val userId = itemSnapshot.child("userId").getValue(String::class.java)?: "Default Name"
                     val sharedPref = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+                    val state =  itemSnapshot.child("state").getValue(String::class.java)?: "Default Name"
                     val userName = itemSnapshot.child("userName").getValue(String::class.java)?: "Default Name"
                     val item = BoardItem(
                         Uri.parse(imageUrl),
@@ -219,11 +257,11 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                         5,
                         5,
                         false,
-                        "판매중",
+                        state,
                         userId,
                         itemId
                         )
-                    viewModel.addItem(item);
+                        viewModel.addItem(item);
                 }
             }
 

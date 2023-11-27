@@ -104,6 +104,7 @@ class AddItemActivity : AppCompatActivity() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         val newItem = hashMapOf(
+            "state" to "판매중",
             "userName" to userName,
             "name" to itemName,
             "price" to itemPrice,
