@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -79,7 +78,7 @@ class BoardAdapter(
             .override(desiredWidth, desiredHeight) // 이미지 크기를 지정합니다.
             .into(holder.imgView)
         holder.name.text = itemList[position].name
-        holder.price.text = itemList[position].price
+        holder.price.text = itemList[position].price + "원"
         holder.intro.text = itemList[position].intro
         holder.tag.text = itemList[position].tag
         holder.owner.text = itemList[position].owner
@@ -108,12 +107,12 @@ class BoardAdapter(
         var imgView = itemView.findViewById<ImageView>(R.id.product)
         val name = itemView.findViewById<TextView>(R.id.product_name)
         val price = itemView.findViewById<TextView>(R.id.product_price)
-        val intro = itemView.findViewById<TextView>(R.id.product_intro)
+        val intro = itemView.findViewById<TextView>(R.id.product_description)
         val tag = itemView.findViewById<TextView>(R.id.product_tag)
         val owner = itemView.findViewById<TextView>(R.id.product_owner)
         val message = itemView.findViewById<TextView>(R.id.product_message)
         val like = itemView.findViewById<TextView>(R.id.product_like)
-        val state = itemView.findViewById<TextView>(R.id.product_state)
+        val state = itemView.findViewById<TextView>(R.id.product_state_spinner)
     }
 }
 
@@ -210,7 +209,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
     }
 
     fun pushNextPage(item: BoardItem,position: Int) {
-        val intent = Intent(this, Look::class.java).apply {
+        val intent = Intent(this, LookActivity::class.java).apply {
             putExtra("name", item.name)
             putExtra("img", item.img.toString())
             putExtra("imgUser", item.imgUser.toString())
@@ -235,6 +234,11 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sell_list)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         val database = FirebaseDatabase.getInstance()
         val addedItemIds = mutableSetOf<String>()
 
@@ -276,7 +280,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                             Uri.parse("android.resource://com.example.hunbbing/drawable/usericon"),
                             Uri.parse("android.resource://com.example.hunbbing/drawable/like_off"),
                             Uri.parse("android.resource://com.example.hunbbing/drawable/message"),
-                            price + "원",
+                            price,
                             itemInfo,
                             tags,
                             userName,

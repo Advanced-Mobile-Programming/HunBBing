@@ -49,7 +49,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/product_intro"
+                android:id="@+id/product_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="안녕하세요\n새상품 입니다\n기스없음."
@@ -129,7 +129,7 @@
                     android:text="0" />
 
                 <TextView
-                    android:id="@+id/product_state"
+                    android:id="@+id/product_state_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"

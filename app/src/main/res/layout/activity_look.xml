@@ -36,10 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:elevation="100dp"
-        app:layout_constraintTop_toTopOf="@id/constraint_tool_bar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/constraint_tool_bar">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -51,28 +52,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:elevation="100dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/product_image_mushroom"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/product_image_mushroom"/>
-
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_user_info"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:layout_constraintTop_toBottomOf="@id/product"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/product">
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    />
+                    app:layout_constraintStart_toStartOf="parent" />
 
 
                 <ImageView
@@ -80,9 +79,9 @@
                     android:layout_width="43dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/baseline_account_circle_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,62 +91,76 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
                     android:text="판매자 : 주황버섯"
                     android:textColor="@color/black"
                     android:textSize="18dp"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imgUser"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
-                    android:id="@+id/product_state"
+                    android:id="@+id/product_state_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginEnd="10dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/product_state_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
+                    android:text="판매중"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <TextView
                 android:id="@+id/product_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/constraint_user_info"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:text="주황버섯의 갓"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="25dp"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraint_user_info" />
 
             <TextView
                 android:id="@+id/product_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="#모자"
-                android:textStyle="italic"
-                android:textSize="16sp"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="@id/product_name"
-                app:layout_constraintBottom_toBottomOf="@id/product_name"
+                android:textSize="16sp"
+                android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="20dp" />
+                app:layout_constraintTop_toBottomOf="@+id/product_name" />
 
             <TextView
-                android:id="@+id/product_intro"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:id="@+id/product_description"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="5dp"
                 android:text="예쁜 주황버섯의 갓 팝니다! 새상품입니다! 기스없음."
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -168,12 +181,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/white">
 
+        <TextView
+            android:id="@+id/won_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="14dp"
+            android:text="원"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/product_price"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <FrameLayout
             android:layout_width="240dp"
             android:layout_height="50dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/product_price"
+            app:layout_constraintStart_toEndOf="@+id/price_suggest"
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
@@ -199,6 +224,19 @@
                 android:textSize="18dp"
                 android:textStyle="bold"
                 app:backgroundTint="#FF9800" />
+
+            <Button
+                android:id="@+id/saveItemBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_background"
+                android:text="수정완료"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:backgroundTint="#FF9800" />
         </FrameLayout>
 
         <View
@@ -213,15 +251,17 @@
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="300000원"
-            android:textSize="22dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
-            android:layout_marginLeft="25dp"/>
+            android:inputType="number"
+            android:text="300000"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:gravity="left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView

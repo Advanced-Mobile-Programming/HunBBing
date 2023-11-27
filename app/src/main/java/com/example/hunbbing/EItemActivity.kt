@@ -54,9 +54,6 @@ class EItemActivity : AppCompatActivity() {
         loadItemData(itemId)
 
         plusbtn.setOnClickListener {
-
-
-
             updateItemToDatabase(itemId)
         }
 
