@@ -115,7 +115,8 @@ class SellListViewModel : ViewModel() {
             originalList.filter {
                 it.name.contains(query, ignoreCase = true) ||
                         it.intro.contains(query, ignoreCase = true) ||
-                        it.tag.contains(query, ignoreCase = true)
+                        it.tag.contains(query, ignoreCase = true) ||
+                        it.owner.contains(query, ignoreCase = true)
             }
         }
         _items.value = filteredList

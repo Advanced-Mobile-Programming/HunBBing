@@ -10,9 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -333,11 +336,53 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
             {
                 "최신순"->viewModel.orderDate()
                 "이름순"->viewModel.orderName()
-                "판매중" -> viewModel.onSale()
-                "판매 완료"->viewModel.soldOut()
                 else->return@setOnCheckedChangeListener
             }
         }
+
+
+
+
+
+
+
+
+
+        val state_sp = findViewById<Spinner>(R.id.pr_st)
+        val array_pr = resources.getStringArray(R.array.product_state)
+        val adapter_sp = ArrayAdapter(this, android.R.layout.simple_spinner_item, array_pr)
+        adapter_sp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        state_sp.adapter = adapter_sp
+
+        // 인텐트에서 "state" 값을 가져옵니다.
+        val initialState = array_pr[0] // 기본값 설정
+        // ArrayAdapter에서 이 값의 인덱스를 찾습니다.
+        val spinnerPosition = adapter_sp.getPosition(initialState)
+        // 스피너의 선택을 해당 인덱스로 설정합니다.
+        state_sp.setSelection(spinnerPosition, false)
+
+        state_sp.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                when(array_pr[p2]){
+                    "판매중" -> viewModel.onSale()
+                    "판매 완료"->viewModel.soldOut()
+                    else -> finish()
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
+
+
+
+
+
+
+
 
         val addbtn = findViewById<FloatingActionButton>(R.id.addbtn)
         addbtn.setOnClickListener {
