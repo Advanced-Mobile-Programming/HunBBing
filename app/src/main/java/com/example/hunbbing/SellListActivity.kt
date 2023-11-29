@@ -175,41 +175,7 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                val state = it.getStringExtra("product_st")?:""
-                val name = it.getStringExtra("editName")?:""
-                val price = it.getStringExtra("editPrice")?:""
-                val intro = it.getStringExtra("editIntro")?:""
-                val tag = it.getStringExtra("editTag")?:""
-                val ownerUid = it.getStringExtra("editOwnerUid")?:""
-                val pos = it.getStringExtra("position")?.toInt()?:0
-                val itemId = it.getStringExtra("itemId")?:"" // 상품의 고유 ID 또는 식별자
-                Log.d(" 값",state.toString())
-                Log.d(" 값",itemId.toString())
-
-
-
-                    val itemRef = myRef.child(itemId) // 여기서 'itemId'는 업데이트하려는 항목의 ID입니다.
-                    itemRef.child("state").setValue(state)
-                    viewModel.updateItem(
-                        state,
-                        name,
-                        price,
-                        intro,
-                        tag,
-                        ownerUid,
-                        pos,
-                        itemId
-                    )
-
-
-
-            }
-        }
-    }
+   
 
     fun pushNextPage(item: BoardItem,position: Int) {
         val intent = Intent(this, LookActivity::class.java).apply {
@@ -249,8 +215,8 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // dataSnapshot 객체에 AddItems 아래의 모든 데이터가 포함됩니다.
+                viewModel.clearList()
                 for (itemSnapshot in dataSnapshot.children) {
-
                     val itemId = itemSnapshot.key ?: "Default Name"
                     if (!addedItemIds.contains(itemId)) {
                         // 중복되지 않은 경우에만 아이템을 추가합니다.
@@ -296,9 +262,11 @@ class SellListActivity : AppCompatActivity() , OnItemClickListener {
                             itemId
                         )
                         viewModel.addItem(item)
+                        Log.d("들",item.name)
                     }
                     else{
                         viewModel.f5()
+                        Log.d("안들","ㅇㅇㅇ")
                     }
                 }
             }

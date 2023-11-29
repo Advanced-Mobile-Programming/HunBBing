@@ -46,6 +46,10 @@ class SellListViewModel : ViewModel() {
         _items.value = originalList.toList()
     }
 
+    fun clearList(){
+        originalList.clear()
+        _items.value = originalList
+    }
     fun updateItem(
         state: String,
         name: String,
