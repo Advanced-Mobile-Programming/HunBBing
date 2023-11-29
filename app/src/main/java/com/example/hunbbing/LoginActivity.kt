@@ -9,8 +9,11 @@ import com.example.hunbbing.databinding.ActivityLoginBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,14 +51,58 @@ class LoginActivity : AppCompatActivity() {
     private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
-                // 로그인 성공
-                val intent = Intent(this, SellListActivity::class.java)
-                startActivity(intent)
-                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                // 사용자 ID를 가져옵니다.
+                val userId = auth.currentUser?.uid
+
+
+                userId?.let { uid ->
+                    database.child("user").child(uid)
+                        .addListenerForSingleValueEvent(/* listener = */ object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+
+                                val user = snapshot.getValue(User::class.java)
+                                user?.let {
+
+                                    saveUserToPreferences(it.name, it.email, uid, it.birth)
+                                }
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+
+                                Log.e("LoginActivity", "데이터 가져오기 실패: ${databaseError.message}")
+                            }
+                        })
+
+                    val intent = Intent(this, SellListActivity::class.java)
+                    startActivity(intent)
+                    Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                } ?: run {
+
+                    Toast.makeText(this, "오류 발생: 사용자 ID를 찾을 수 없음", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                // 로그인 실패
+
                 Toast.makeText(this, "로그인 실패: ${it.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+    private fun saveUserToPreferences(name: String, email: String, userId: String, birth: String) {
+        // SharedPreferences 인스턴스를 가져옵니다.
+        val sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // 사용자 정보를 SharedPreferences에 저장합니다.
+        editor.putString("UserName", name)
+        editor.putString("UserEmail", email)
+        editor.putString("UserId", userId)
+        editor.putString("UserBirth", birth)
+
+        // 변경사항을 적용합니다.
+        editor.apply()
+
+        // 로그를 통해 저장이 성공했는지 확인합니다.
+        Log.d("SignUpActivity", "SharedPreferences에 사용자 정보 저장 성공: $userId")
+    }
+
 }
