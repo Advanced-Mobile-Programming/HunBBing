@@ -47,19 +47,30 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun signUp(email: String, password: String, name: String, birth: String) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                val userId= auth.currentUser?.uid!!
-                addUserToDatabase(name, email, password ,userId, birth)
-                Log.d("SignUpActivity", "회원가입 성공: $userId")
+                // 사용자가 성공적으로 생성되면, 바로 로그인 처리
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { loginTask ->
+                    if (loginTask.isSuccessful) {
+                        val userId = auth.currentUser?.uid!!
+                        addUserToDatabase(name, email, password, userId, birth)
+
+                        // SellListActivity로 이동
+                        val intent = Intent(this, SellListActivity::class.java)
+                        startActivity(intent)
+                        Log.d("SignUpActivity", "회원가입 후 자동 로그인 성공: $userId")
+                    } else {
+                        Log.d("SignUpActivity", "회원가입 후 자동 로그인 실패", loginTask.exception)
+                        Toast.makeText(this, "자동 로그인 실패: ${loginTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
-                Log.d("SignUpActivity",it.exception.toString())
-                Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                Log.d("SignUpActivity", "회원가입 실패", it.exception)
+                Toast.makeText(this, "회원가입 실패: ${it.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     private fun addUserToDatabase(name: String, email: String, password: String, userId: String, birth: String) {
         val user = User(name, email, userId, password, birth)
